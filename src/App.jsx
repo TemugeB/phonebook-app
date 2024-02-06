@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import phonebookServices from './services/Contacts'
-import {PhoneNumber, FilterEntry, Phonebook, EntryForm} from './components/Contact'
+import {FilterEntry, Phonebook, EntryForm} from './components/Contact'
 import Notification from './components/Notification'
 
 const App = () => {
@@ -74,12 +73,12 @@ const App = () => {
     if (window.confirm(`Delete ${person.name} ?`)){
       phonebookServices
       .delete_entry(person.id)
-      .then(reponse => {
+      .then(() => {
         setPersons(persons.filter(p => p.id !== person.id))
         setAlertMessage([`Deleted phonebook entry for '${person.name}'`, false])
         setTimeout(() => setAlertMessage([null, false]), 3000)
       })
-      .catch(error => {
+      .catch(() => {
         console.log('Unable to delete entry')
         setAlertMessage([`Information of ${person.name} is already removed from server`, true])
         setTimeout(() => {setAlertMessage([null, false])}, 3000)
