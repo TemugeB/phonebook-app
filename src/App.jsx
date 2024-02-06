@@ -26,16 +26,6 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    if (newName === ''){
-      alert('Please input valid name')
-      return
-    }
-
-    if (newNumber === ''){
-      alert('Please input valid phone number')
-      return
-    }
-
     if (persons.map(person => person.name).includes(newName)){
       //Ask to update the phone number
       if (window.confirm(`${newName} already exists in the phonebook. Update with new phone number?`) === false){
@@ -49,9 +39,13 @@ const App = () => {
         .then(respondedPerson => {
           setPersons(persons.map(p => p.id !== respondedPerson.id ? p: respondedPerson))
           setAlertMessage([`Updated contact info of '${respondedPerson.name}'`, false])
-          setTimeout(() => setAlertMessage([null, false]), 5000)
+          setTimeout(() => setAlertMessage([null, false]), 3000)
         })
-        .catch(error => console.log('unable to update phone number: ', error))
+        .catch(error => {
+          console.log('unable to update phone number: ', error)
+          setAlertMessage([error.response.data.error, true])
+          setTimeout(()=> {setAlertMessage([null, false])}, 3000)
+        })
       return
     }
 
@@ -65,9 +59,13 @@ const App = () => {
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
         setAlertMessage([`Added contact info for '${returnedPerson.name}'`, false])
-        setTimeout(() => {setAlertMessage([null, false])}, 5000)
+        setTimeout(() => {setAlertMessage([null, false])}, 3000)
       })
-      .catch(error => console.log('unable to add new entry:', error))
+      .catch(error => {
+        console.log('unable to add new entry:', error)
+        setAlertMessage([error.response.data.error, true])
+        setTimeout(() => {setAlertMessage([null, false])}, 3000)
+      })
   }
 
 
@@ -79,12 +77,12 @@ const App = () => {
       .then(reponse => {
         setPersons(persons.filter(p => p.id !== person.id))
         setAlertMessage([`Deleted phonebook entry for '${person.name}'`, false])
-        setTimeout(() => setAlertMessage([null, false]), 5000)
+        setTimeout(() => setAlertMessage([null, false]), 3000)
       })
       .catch(error => {
         console.log('Unable to delete entry')
         setAlertMessage([`Information of ${person.name} is already removed from server`, true])
-        setTimeout(() => {setAlertMessage([null, false])}, 5000)
+        setTimeout(() => {setAlertMessage([null, false])}, 3000)
       })
     }
   }
